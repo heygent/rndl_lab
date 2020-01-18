@@ -1,4 +1,4 @@
-load fun
+load fung
 %
 %presuppone che fung sia stato caricato e che ci sia in memoria la matrice fun 8124x127
 %
@@ -19,7 +19,7 @@ rand('state',1992)
 figure(1)
 plot(v)
 fprintf('percentuale appresa correttamente : %f per cento \n',(max(v)/4062)*100)
-pause
+
 
 [hh,h]=max(v); %indice del primo massimo
 

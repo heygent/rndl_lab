@@ -18,7 +18,7 @@ display('risposte corrette - nella fase di apprendimento - su 350 ')
 max(v)
 figure(1)
 plot(v)
-pause
+
 
 [z,h]=max(v); %indice del primo massimo
 

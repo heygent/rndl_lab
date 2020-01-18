@@ -1,5 +1,5 @@
 load con1
-% suppone caricato conc1 : c'è con1 in memoria, è 2500x3
+% suppone caricato conc1 : c'Ã¨ con1 in memoria, Ã¨ 2500x3
 
 figure(1)
 plot(con1(:,1)',con1(:,2)','o')

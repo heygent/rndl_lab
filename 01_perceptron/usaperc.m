@@ -7,7 +7,7 @@ function ris=usaperc(W,P);
 
 [t,m]=size(P); %t patterns m dimensionali
 
-P(:,m+1)=-ones(t,1); %si aggiunge una colonna di -1 a P: è il valore fisso del bias
+P(:,m+1)=-ones(t,1); %si aggiunge una colonna di -1 a P: Ã¨ il valore fisso del bias
 
 w=size(W,2);
 

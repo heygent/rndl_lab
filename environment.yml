@@ -1,0 +1,8 @@
+name: rndl_lab
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - octave
+  - octave_kernel
+  - gnuplot
