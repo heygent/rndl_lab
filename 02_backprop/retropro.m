@@ -1,50 +1,44 @@
-function [A,B,R,err,c]=retropro(Inp,Targ,nhid,Eta,Err,Nmax,seme);
+function [W_hid, W_out, Y_hat, error_history, iterations] = ...
+  retropro(X, Y, hidden_size, learning_rate, error_threshold, max_iterations);
 
-[N,n]=size(Inp);
-[N1,z]=size(Targ);
 
-if N~=N1 
-fprintf('Dimensionamento non corretto\n\n');
-% break;
+[dataset_rows, input_size] = size(X);
+output_size = size(Y, 2);
+
+if dataset_rows ~= size(Y, 1)
+    error('Dimensionamento non corretto\n\n');
 end
 
-%Inizializzazione random dei pesi
-rand('state',seme);
-A=2*(rand(nhid,n)-0.5*ones(nhid,n));
-B=2*(rand(z,nhid)-0.5*ones(z,nhid));
+% Inizializzazione random dei pesi
+W_hid = (rand(hidden_size, input_size) - 0.5) * 2;
+W_out = (rand(output_size, hidden_size) - 0.5) * 2;
 
-Inp=Inp';
-Targ=Targ';
-Nd=N*z;
-err=[];
+X = X';
+Y = Y';
+output_elem_count = dataset_rows * output_size;
+error_history = [];
 
-c=0;
-ciclo=0;
 
-while ciclo==0
-    R=f(B*f(A*Inp));
-	q=ones(1,z)*((R-Targ).^2)*ones(N,1)/Nd;
-        err=[err q];
+for iterations = 1:max_iterations
 
-	if q<=Err | c>=Nmax
-		ciclo=1;
-	end
-	
-	if ciclo==0
-		c=c+1;
-		for k=1:N
-			%
-			% Modifica di A e B.
-			%
-			Yhid=f(A*Inp(:,k));
-			Out=f(B*Yhid);
-			DOut=(Targ(:,k)-Out).*Out.*(1-Out);
-			E=DOut'*B;
-            B=B+DOut*Yhid';
-			DYhid=Eta*E'.*Yhid.*(1-Yhid);
-			A=A+DYhid*Inp(:,k)';
-			%
-		end
-	end
+    Y_hat = f(W_out * f(W_hid * X));
+    current_error = sum(sum(((Y_hat-Y).^2))) / output_elem_count;
+
+    error_history = [error_history current_error];
+
+    if current_error <= error_threshold
+        break
+    end
+    
+    for k=1:dataset_rows
+        % Modifica di W_hid e B.
+        Y_hid = f(W_hid * X(:, k));
+        Y_out=f(W_out*Y_hid);
+        DOut=(Y(:,k) - Y_out) .* Y_out .* (1-Y_out);
+        E=DOut' * W_out;
+        W_out = W_out + DOut * Y_hid';
+        DYhid=learning_rate*E'.* Y_hid .*(1-Y_hid);
+        W_hid=W_hid+DYhid*X(:,k)';
+    end
 end
-R=R';
+Y_hat=Y_hat';
