@@ -31,14 +31,18 @@ for iterations = 1:max_iterations
     end
     
     for k=1:dataset_rows
-        % Modifica di W_hid e B.
-        Y_hid = f(W_hid * X(:, k));
-        Y_out=f(W_out*Y_hid);
-        DOut=(Y(:,k) - Y_out) .* Y_out .* (1-Y_out);
-        E=DOut' * W_out;
-        W_out = W_out + DOut * Y_hid';
-        DYhid=learning_rate*E'.* Y_hid .*(1-Y_hid);
-        W_hid=W_hid+DYhid*X(:,k)';
+        x = X(:, k);
+        y = Y(:, k);
+        % Modifica di W_hid e W_out.
+        % a_hid e a_out sono le attivazioni del layer nascosto e di output.
+        a_hid = f(W_hid * x);
+        a_out = f(W_out * a_hid);
+        delta_out = (y - a_out) .* f_grad(a_out);
+        E = delta_out' * W_out;
+        W_out = W_out + delta_out * a_hid';
+
+        delta_hid = learning_rate * E' .* f_grad(a_hid);
+        W_hid = W_hid + delta_hid * x';
     end
 end
 Y_hat=Y_hat';

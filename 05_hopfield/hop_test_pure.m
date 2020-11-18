@@ -1,25 +1,18 @@
-function [s, count, M]=hop_test(W,x,update)
 
-% function [s, count, M]=hop_test(W,x,update)
+function [s, count, M]=hop_test_pure(W,x)
+
+% function [s, count, M]=hop_test_pure(W,x)
 %
 %   s - output state vector
 %   count - number of cycles until stable state is reached
 %   M - matrix containing the intermediate network states
 %   W - weight matrix
 %   x - probe vector
-%   update - how often to view the network
 %   
 % Hugh Pasika 1997
 
 % initialize a few variables
 [r c]=size(x);   s_prev=x(:);  N=r*c;  count=0; M=zeros(120,1);
-
-% the next 5 lines determine if interim plotting is to be done
-if update > 0, 
-    plot='on '; 
-else
-    plot='off'; update=1; % set update to prevent divide by zero error later
-end
 
 % the upper limit in the loop is arbitrary (you'll never reach it)
 while count < 1000,
@@ -42,20 +35,6 @@ while count < 1000,
     r_ind=ceil(rand(1)*length(ch));  % select one neuron for updating
     s_prev(ch(r_ind))=s_prev(ch(r_ind))*(-1);    % update it
 
-  % the next 6 lines are plotting directives to show intermediate stages
-    %if (plot == 'on ') & floor(count/update) == (count/update) ;
-    %    hop_plotdig(s_prev,12,10,'Current State');
-    %    fprintf(1,'\nThe current iteration is: %4.0f \n',count);
-    %    fprintf(1,'Hit any key to continue. \n')
-    %    pause
-    %end
-    
-end
-
-% more plotting directives
-if (plot == 'on '), 
-  hop_plotdig(s_prev,12,10,'Final State');
-  fprintf(1,'\nTraining stopped after %4.0f iterations.\n',count);
 end
 
 % storage of stable state
